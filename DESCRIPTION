@@ -2,12 +2,12 @@ Package: estudy
 Type: Package
 Title: An implementation of the classical event study approach by S.J. Brown,
     J.B. Warner
-Version: 0.9
+Version: 0.0.0.9000
 Date: 2015-04-11
 Author: person("Iegor", "Rudnytskyi", email = "iegor.rudnytskyi@gmail.com",
     role = c("aut", "cre"))
 Description: More about what it does (maybe more than one line)
-License: What license is it under?
+License: CC0
 Imports: zoo
 URL: https://github.com/irudnyts/estudy
 BugReports: https://github.com/irudnyts/estudyissues
