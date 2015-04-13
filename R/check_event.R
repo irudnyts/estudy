@@ -1,4 +1,3 @@
-#' Sum of vector elements.
 GetNextDate <- function(date, set) {
     # Return the closest date in set, which is greater then argument date. 
     # Args:
