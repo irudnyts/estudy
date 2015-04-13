@@ -1,10 +1,4 @@
 #' Sum of vector elements.
-#' 
-#' \code{sum} returns the sum of all the values present in its arguments.
-#' 
-#' This is a generic function: methods can be defined for it directly or via the
-#' \code{\link{Summary}} group generic. For this to work properly, the arguments
-#' \code{...} should be unnamed, and dispatch is on the first argument.
 GetNextDate <- function(date, set) {
     # Return the closest date in set, which is greater then argument date. 
     # Args:
