@@ -1,3 +1,15 @@
+#' The clothest date in a given set, which is greater then arument date.
+#' 
+#' Return the closest date in set, which is greater then argument date.
+#' 
+#'  @param date the date, for which the closest will be choosen
+#'  @param set the vector, which contains dates for search
+#'  @return the closest date from set
+#'  @examples
+#'  GetNextDate(as.Date("25.08.2005","%d.%m.%Y"), 
+#'              c(as.Date("25.08.2001","%d.%m.%Y"), 
+#'                as.Date("25.08.2002","%d.%m.%Y"),
+#'                as.Date("25.08.20010","%d.%m.%Y")))
 GetNextDate <- function(date, set) {
     # Return the closest date in set, which is greater then argument date. 
     # Args:
