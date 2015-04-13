@@ -19,8 +19,8 @@ Return the closest date in set, which is greater then argument date.
 }
 \examples{
 GetNextDate(as.Date("25.08.2005","\%d.\%m.\%Y"),
-             c(as.Date("25.08.2001","\%d.\%m.\%Y"),
-               as.Date("25.08.2002","\%d.\%m.\%Y"),
-               as.Date("25.08.20010","\%d.\%m.\%Y")))
+ c(as.Date("25.08.2001","\%d.\%m.\%Y"),
+ as.Date("25.08.2002","\%d.\%m.\%Y"),
+ as.Date("25.08.20010","\%d.\%m.\%Y")))
 }
 
