@@ -73,6 +73,9 @@ CheckEvent.df <- function(rates, index.ticker = character(), event.date,
     col.index <- which(colnames(rates) %in% index.ticker)
     col.date <- which(colnames(rates) %in% "date")
     col.companies <- (1:ncol(rates))[c(-col.index, -col.date)]
+    # number of companies, without date and index column
+    N <- ncol(rates) - 2
+    N.sqrt <- sqrt(N)
     
     # data.frame, which stores abnormals
     abnormals <-
@@ -99,37 +102,60 @@ CheckEvent.df <- function(rates, index.ticker = character(), event.date,
     # can through an error (if in rowMeans # of columns == 1)
     if(length(col.companies) > 1) {
         abnormals.means <- rowMeans(abnormals[, -1])
+        abnormals.sd <- sqrt(apply(abnormals[, -1], 1, var))
     } else if(length(col.companies) == 1) {
         abnormals.means <- abnormals[, -1]
     }
+    
     # calculate var
-    abnormals.sd <- sqrt(var(abnormals.means[1:delta]))
+    abnormals.crude.sd <- sqrt(var(abnormals.means[1:delta]))
     # nice result data.frame
     result <- data.frame(date =
                              abnormals[(delta + 1):(delta + w.a + w.b + 1), 1],
-                         statistics = numeric(w.a + w.b + 1),
-                         significance = character(w.a + w.b + 1),
+                         t.stat = numeric(w.a + w.b + 1),
+                         t.signif = character(w.a + w.b + 1),
+                         c.stat = numeric(w.a + w.b + 1),
+                         c.signif = character(w.a + w.b + 1),
                          perc.negative = numeric(w.a + w.b + 1),
                          stringsAsFactors = F)
+    qnorm.001 <- qnorm(1 - 0.01/2)
+    qnorm.005 <- qnorm(1 - 0.05/2)
+    qnorm.01 <- qnorm(1 - 0.10/2)
+    qt.001 <- qt(1 - 0.01/2, df = N - 1)
+    qt.005 <- qt(1 - 0.05/2, df = N - 1)
+    qt.01 <- qt(1 - 0.1/2, df = N - 1)
+    browser()
     for(i in 1:nrow(result)) {
-        statistics <- abnormals.means[delta + i] / abnormals.sd # extra variable
-        # for fast code
-        result[i, 2] <- statistics
-        result[i, 3] <- if(abs(statistics) > qnorm(1 - 0.01/2)) { 
+        t.stat <- abnormals.means[delta + i] / abnormals.sd[delta + i] * N.sqrt
+        c.stat <- abnormals.means[delta + i] / abnormals.crude.sd
+        t.stat.abs <- abs(t.stat)
+        c.stat.abs <- abs(c.stat)
+        result[i, 2] <- t.stat
+        result[i, 3] <- if(t.stat.abs > qt.001) { 
             "***"
-        } else if(abs(statistics) > qnorm(1 - 0.05/2)) {
+        } else if(t.stat.abs > qt.005) {
             "**"
-        } else if(abs(statistics) > qnorm(1 - 0.10/2)) {
+        } else if(t.stat.abs > qt.01) {
             "*"  
         } else {
             ""
         }
-        result[i, 4] <- (sum(abnormals[delta + i, -1] < 0) /
+        result[i, 4] <- c.stat
+        result[i, 5] <- if(c.stat.abs > qnorm.001) { 
+            "***"
+        } else if(c.stat.abs > qnorm.005) {
+            "**"
+        } else if(c.stat.abs > qnorm.01) {
+            "*"  
+        } else {
+            ""
+        }
+        result[i, 6] <- (sum(abnormals[delta + i, -1] < 0) /
                              (ncol(abnormals) - 1)) * 100
         
     }
     return(result)
-    }
+}
 
 CheckEvent.zoo <- function(..., index, event.date, w.b = numeric(),
                            w.a = numeric(), delta = numeric()) {
