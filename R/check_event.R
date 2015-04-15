@@ -9,9 +9,7 @@
 #' @param set the vector of the class Date, which contains dates for search 
 #' @return the closest date from \code{set}
 #' @examples
-#' GetNextDate(as.Date("01.05.2005","%d.%m.%Y"), 
-#'     c(as.Date("01.01.2005","%d.%m.%Y"), as.Date("01.08.2005","%d.%m.%Y"), 
-#'     as.Date("01.03.2005","%d.%m.%Y")))
+#' GetNextDate()
 GetNextDate <- function(date, set) {
     # Return the closest date in set, which is greater then argument date. 
     # Args:

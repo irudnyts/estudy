@@ -22,8 +22,6 @@ Return the closest date in \code{set}, which is greater then argument date.
 The \code{date} should not be greater then the largest date in \code{set}.
 }
 \examples{
-GetNextDate(as.Date("01.05.2005","\%d.\%m.\%Y"),
-    c(as.Date("01.01.2005","\%d.\%m.\%Y"), as.Date("01.08.2005","\%d.\%m.\%Y"),
-    as.Date("01.03.2005","\%d.\%m.\%Y")))
+GetNextDate()
 }
 
