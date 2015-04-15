@@ -34,7 +34,7 @@ Well-combined with packages tseries and yahoo finance data. Note: zoo package
 should be loaded.
 }
 \examples{
-library(tseries)
+library("tseries"); library("zoo")
 date(rates)
 ALV.DE <- get.hist.quote(instrument = "ALV.DE", start = "2000-01-01",
                          end = "2014-12-31", quote = "Open",

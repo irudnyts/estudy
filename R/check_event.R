@@ -183,7 +183,7 @@ CheckEvent.df <- function(rates, index.ticker = character(), event.date,
 #' @param delta numeric, length of estimation period.
 #' @return data.frame with marked dates and test statistics
 #' @examples
-#' library(tseries)
+#' library("tseries"); library("zoo")
 #' date(rates)
 #' ALV.DE <- get.hist.quote(instrument = "ALV.DE", start = "2000-01-01",
 #'                          end = "2014-12-31", quote = "Open",
