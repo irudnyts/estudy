@@ -1,3 +1,11 @@
+#' Return the closest date in set, which is greater then argument date.
+#' 
+#' @param date the date, for which the closest will be choosen
+#' @param set the vector, which contains dates for search 
+#' @return the closest date from \code{set}
+#' @examples
+#' GetNextDate(1, 1)
+#' GetNextDate(10, 1)
 GetNextDate <- function(date, set) {
     # Return the closest date in set, which is greater then argument date. 
     # Args:
