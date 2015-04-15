@@ -13,13 +13,6 @@
 #'     c(as.Date("01.01.2005","%d.%m.%Y"), as.Date("01.08.2005","%d.%m.%Y"), 
 #'     as.Date("01.03.2005","%d.%m.%Y")))
 GetNextDate <- function(date, set) {
-    # Return the closest date in set, which is greater then argument date. 
-    # Args:
-    #   date: the date, for which the closest will be choosen
-    #   set: the vector, which contains dates for search
-    # Returns:
-    #   the closest date from set
-    
     # check arguments for validity
     stopifnot(inherits(date, "Date"), inherits(set, "Date"))
     set <- sort(set)
@@ -34,31 +27,34 @@ GetNextDate <- function(date, set) {
     set[i]   
 }
 
-
-
+#' Check the event date of significance.
+#'
+#' Check the event date on significance for given market index and companies.
+#' 
+#' Data.frame rates should contain the column with exact name \code{date}, which 
+#' sould contain the dates, as well as column with name \code{index.ticker}
+#' 
+#' @param rates data.frame, which contains daily rates of return for companies
+#'   and index, as well as column with dates and name "date"
+#' @param index.ticker character, the ticker of the index, must be a column name
+#'   of data data.frame.
+#' @param event.date date, specifying event date, which should be tested.
+#' @param w.b numeric, parameter of time frame (window), specifying number of 
+#'   days before event.
+#' @param w.a numeric, parameter of time frame (window), specifying number of
+#'   days after event.
+#' @param delta numeric, length of estimation period.
+#' @return data.frame with marked dates and test statistics
+#' @examples
+#' data(rates)
+#' CheckEvent.df(rates = rates, index.ticker = "SXW1E", 
+#'               event.date = as.Date("11.09.2001","%d.%m.%Y"), w.b = 10,
+#'               w.a = 10, delta = 110)
 CheckEvent.df <- function(rates, index.ticker = character(), event.date,
                           w.b = numeric(),
                           w.a = numeric(),
                           delta = numeric()) {
-    # Check the event date on significance for given market index and companies.
-    #
-    # Args:
-    #   rates: data.frame containing daily prices for companies and index, as 
-    #          well as column with dates and name "date"
-    #   index.ticker: character, the ticker of the index, must be a column name
-    #                 of data data.frame.
-    #   event.date: Date, specifying event date, which should be tested.
-    #   w.b: numeric, parameter of time frame (window), specifying number of
-    #        days before event.
-    #   w.b: numeric, parameter of time frame (window), specifying number of
-    #        days after event.
-    #   delta: numeric, length of estimation period.
-    #
-    # Returns:
-    #   data.frame with marked dates and test statistics
-    
-    # check all arguments for validity
-    
+    # check all arguments for validity    
     if(length(which(colnames(rates) %in% index.ticker)) != 1) {
         stop("The data.frame retes does not contain such an index as
              index.ticker.")
@@ -67,7 +63,6 @@ CheckEvent.df <- function(rates, index.ticker = character(), event.date,
         warning("The data.frame rates does not contain date event.date or
                 contain multiple dates. The event date to the closest following
                 will be taken instead.")
-        # browser()
         event.date <- GetNextDate(event.date, rates[ , "date"])
     }
     if(!is.numeric(w.b) || !is.numeric(w.a) || !is.numeric(delta)) {
