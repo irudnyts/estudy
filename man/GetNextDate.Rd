@@ -7,8 +7,7 @@
 GetNextDate(date, set)
 }
 \arguments{
-\item{date}{the single-value vector of class Date, for which the closest will
-be choosen}
+\item{date}{the single-value vector of class Date}
 
 \item{set}{the vector of the class Date, which contains dates for search}
 }

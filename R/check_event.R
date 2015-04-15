@@ -3,8 +3,7 @@
 #' Return the closest date in \code{set}, which is greater then argument date.
 #' The \code{date} should not be greater then the largest date in \code{set}. 
 #' 
-#' @param date the single-value vector of class Date, for which the closest will
-#'   be choosen
+#' @param date the single-value vector of class Date
 #' @param set the vector of the class Date, which contains dates for search 
 #' @return the closest date from \code{set}
 #' @examples
