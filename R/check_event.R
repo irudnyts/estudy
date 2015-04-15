@@ -1,11 +1,17 @@
-#' Return the closest date in set, which is greater then argument date.
+#' Return clothest to \code{date} date in the \code{set}
+#'
+#' Return the closest date in \code{set}, which is greater then argument date.
 #' 
-#' @param date the date, for which the closest will be choosen
-#' @param set the vector, which contains dates for search 
+#' The \code{date} should not be greater then the largest date in \code{set}. 
+#' 
+#' @param date the single-value vector of class Date, for which the closest will
+#'     be choosen
+#' @param set the vector of the class Date, which contains dates for search 
 #' @return the closest date from \code{set}
 #' @examples
-#' GetNextDate(1, 1)
-#' GetNextDate(10, 1)
+#' GetNextDate(as.Date("01.05.2005","%d.%m.%Y"), 
+#'     c(as.Date("01.01.2005","%d.%m.%Y"), as.Date("01.08.2005","%d.%m.%Y"), 
+#'     as.Date("01.03.2005","%d.%m.%Y")))
 GetNextDate <- function(date, set) {
     # Return the closest date in set, which is greater then argument date. 
     # Args:
