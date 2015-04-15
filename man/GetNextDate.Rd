@@ -15,8 +15,7 @@ GetNextDate(date, set)
 the closest date from \code{set}
 }
 \description{
-Return the closest date in \code{set}, which is greater then argument date.
-The \code{date} should not be greater then the largest date in \code{set}.
+Return clothest to \code{date} date in the \code{set}
 }
 \examples{
 GetNextDate()
