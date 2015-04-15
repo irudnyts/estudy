@@ -133,7 +133,6 @@ CheckEvent.df <- function(rates, index.ticker = character(), event.date,
     qt.001 <- qt(1 - 0.01/2, df = N - 1)
     qt.005 <- qt(1 - 0.05/2, df = N - 1)
     qt.01 <- qt(1 - 0.1/2, df = N - 1)
-    browser()
     for(i in 1:nrow(result)) {
         t.stat <- abnormals.means[delta + i] / abnormals.sd[delta + i] * N.sqrt
         c.stat <- abnormals.means[delta + i] / abnormals.crude.sd
