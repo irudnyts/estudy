@@ -3,14 +3,15 @@
 \docType{data}
 \name{rates}
 \alias{rates}
-\title{Dataset of 3'263 daily rates for listed insurance companies and index SXW1E}
+\title{Dataset of 3'263 daily rates of return}
 \format{A data frame with 3263 rows and 12 variables}
 \usage{
 data(rates)
 }
 \description{
-Dataset contains 3'263 daily rates from 4.1.2000 to 12.31.2014 for insurance
-  companies. Tickers of the companies represent names of the columns:
+Dataset contains 3'263 daily rates of return from 4.1.2000 to 12.31.2014 for
+  insurance companies. Tickers of the companies represent names of the
+  columns:
 }
 \details{
 \itemize{

@@ -19,10 +19,11 @@
 #' @name estudy
 NULL
 
-#' Dataset of 3'263 daily rates for listed insurance companies and index SXW1E
+#' Dataset of 3'263 daily rates of return
 #'
-#' Dataset contains 3'263 daily rates from 4.1.2000 to 12.31.2014 for insurance
-#'   companies. Tickers of the companies represent names of the columns:
+#' Dataset contains 3'263 daily rates of return from 4.1.2000 to 12.31.2014 for
+#'   insurance companies. Tickers of the companies represent names of the
+#'   columns:
 #'
 #' \itemize{
 #'   \item date: dates of correspondent rates from "200-01-04" to "2014-12-31"
