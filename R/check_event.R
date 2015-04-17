@@ -185,7 +185,7 @@ CheckEvent.df <- function(rates, index.ticker = character(), event.date,
                              (ncol(abnormals) - 1)) * 100
         
     }
-    return(list(abnormals, abnormals.means, result))
+    return(list(abnormals, abnormals.means, result, series))
 }
 
 #' Check the event date of significance.
