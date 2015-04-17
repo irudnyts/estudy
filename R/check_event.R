@@ -91,7 +91,11 @@ CheckEvent.df <- function(rates, index.ticker = character(), event.date,
         data.frame(date
                    = rates[(t.e - w.b - delta):(t.e + w.a), col.date],
                    stringsAsFactors = F)
-    
+    ####
+    series <- data.frame(date
+                         = rates[(t.e - w.b - delta):(t.e + w.a), col.date],
+                         stringsAsFactors = F)
+    ####
     for(col.company in col.companies) {
         # for all companies perform OLS
         estimated.parameters <- lm(
@@ -102,6 +106,25 @@ CheckEvent.df <- function(rates, index.ticker = character(), event.date,
                 estimated.parameters$coefficients[[1]] - 
                 estimated.parameters$coefficients[[2]] * 
                 rates[(t.e - w.b - delta):(t.e + w.a), col.index])
+        ####
+        company.predicter <- data.frame(estimated.parameters$coefficients[[1]] + 
+            estimated.parameters$coefficients[[2]] * 
+            rates[(t.e - w.b - delta):(t.e + w.a), col.index])
+        company.observed <- data.frame(
+            rates[(t.e - w.b - delta):(t.e + w.a), col.company])
+        company.all <- cbind(company.predicter, company.observed)
+        colnames(company.all) <- c(paste(colnames(rates)[col.company], ".pred",
+                                         sep = ""),
+                                   paste(colnames(rates)[col.company], ".obs",
+                                         sep = ""))
+        series <- cbind(series, company.all)        
+        #####
+        
+        
+        
+        
+        
+        
         # actually we do not need names in abnormals, so we can avoid creating
         # new variable and directly use cbind
         colnames(company.abnormal) <- colnames(rates)[col.company]
