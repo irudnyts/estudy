@@ -10,6 +10,8 @@ CleanSeries.zoo <- function(...) {
     stopifnot(sapply(list.args, is.zoo))
     
     series <- CombineZoosToDataframe(...)
+    message(paste(as.character(sum(!complete.cases(series))), "observations",
+                  "were deleted", sep = ""))
     return(series[complete.cases(series), ])
 }
 
@@ -20,5 +22,7 @@ CleanSeries.zoo <- function(...) {
 #' @param series data.frame with series
 #' @return data.frame of series without NA's
 CleanSeries.data.frame <- function(series) {
+    message(paste(as.character(sum(!complete.cases(series))), "observations",
+                  "were deleted", sep = ""))
     return(series[complete.cases(series), ])
 }
