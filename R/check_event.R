@@ -144,6 +144,9 @@ CheckEvent.df <- function(rates, index.ticker = character(), event.date,
     # nice result data.frame
     result <- data.frame(date =
                              abnormals[(delta + 1):(delta + w.a + w.b + 1), 1],
+                         w.day = 
+                             weekdays(abnormals[(delta + 1):
+                                                (delta + w.a + w.b + 1), 1]),
                          t.stat = numeric(w.a + w.b + 1),
                          t.signif = character(w.a + w.b + 1),
                          c.stat = numeric(w.a + w.b + 1),
