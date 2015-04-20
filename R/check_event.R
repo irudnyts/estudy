@@ -142,6 +142,7 @@ CheckEvent.df <- function(rates, index.ticker = character(), event.date,
     # calculate var
     abnormals.crude.sd <- sqrt(var(abnormals.means[1:delta]))
     # nice result data.frame
+    browser()
     result <- data.frame(date =
                              abnormals[(delta + 1):(delta + w.a + w.b + 1), 1],
                          w.day = 
