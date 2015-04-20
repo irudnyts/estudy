@@ -142,7 +142,6 @@ CheckEvent.df <- function(rates, index.ticker = character(), event.date,
     # calculate var
     abnormals.crude.sd <- sqrt(var(abnormals.means[1:delta]))
     # nice result data.frame
-    browser()
     result <- data.frame(date =
                              abnormals[(delta + 1):(delta + w.a + w.b + 1), 1],
                          w.day = 
@@ -165,8 +164,8 @@ CheckEvent.df <- function(rates, index.ticker = character(), event.date,
         c.stat <- abnormals.means[delta + i] / abnormals.crude.sd
         t.stat.abs <- abs(t.stat)
         c.stat.abs <- abs(c.stat)
-        result[i, 2] <- t.stat
-        result[i, 3] <- if(t.stat.abs > qt.001) { 
+        result[i, 3] <- t.stat
+        result[i, 4] <- if(t.stat.abs > qt.001) { 
             "***"
         } else if(t.stat.abs > qt.005) {
             "**"
@@ -175,8 +174,8 @@ CheckEvent.df <- function(rates, index.ticker = character(), event.date,
         } else {
             ""
         }
-        result[i, 4] <- c.stat
-        result[i, 5] <- if(c.stat.abs > qnorm.001) { 
+        result[i, 5] <- c.stat
+        result[i, 6] <- if(c.stat.abs > qnorm.001) { 
             "***"
         } else if(c.stat.abs > qnorm.005) {
             "**"
@@ -185,7 +184,7 @@ CheckEvent.df <- function(rates, index.ticker = character(), event.date,
         } else {
             ""
         }
-        result[i, 6] <- (sum(abnormals[delta + i, -1] < 0) /
+        result[i, 7] <- (sum(abnormals[delta + i, -1] < 0) /
                              (ncol(abnormals) - 1)) * 100
         
     }
