@@ -4,10 +4,12 @@
 \alias{PlotSeries}
 \title{Plot series with hatched weekends}
 \usage{
-PlotSeries(series)
+PlotSeries(series, ...)
 }
 \arguments{
 \item{series}{data.frame, with two columns, one is "date".}
+
+\item{...}{parameters, passed to plot(...)}
 }
 \description{
 Plot series with hatched in gray weekends

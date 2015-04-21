@@ -5,11 +5,12 @@
 #' \code{series} should be data.frame with column "date" 
 #' 
 #' @param series data.frame, with two columns, one is "date".
+#' @param ... parameters, passed to plot(...)
 #' @return NULL
 #' @examples
 #' PlotSeries(rates[, c(1, 2)])
-PlotSeries <- function(series) {
-    plot(series, type = "o")
+PlotSeries <- function(series, ...) {
+    plot(series, type = "o", ...)
     for(i in 1:length(seq(from = as.Date(series[1, "date"]),
                           to = as.Date(series[nrow(series), "date"]),
                           by = 1))) {
