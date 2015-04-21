@@ -95,7 +95,7 @@ CheckEvent.df <- function(rates, index.ticker = character(), event.date,
     series <- data.frame(date
                          = rates[(t.e - w.b - delta):(t.e + w.a), col.date],
                          stringsAsFactors = F)
-    coef <- list()
+    coef <- data.frame(name = character(), alpha = numeric(), beta = numeric())
     ####
     for(col.company in col.companies) {
         # for all companies perform OLS
@@ -119,7 +119,9 @@ CheckEvent.df <- function(rates, index.ticker = character(), event.date,
                                    paste(colnames(rates)[col.company], ".obs",
                                          sep = ""))
         series <- cbind(series, company.all)        
-        coef <- c(coef, estimated.parameters$coefficients) 
+        coef <- rbind(coef, data.frame(colnames(rates)[col.company],
+                                       estimated.parameters$coefficients[[1]],
+                                       estimated.parameters$coefficients[[2]]))
         #####
         
         
