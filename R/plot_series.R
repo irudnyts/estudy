@@ -15,7 +15,7 @@ PlotSeries <- function(series) {
                           by = 1))) {
         date <- as.Date(series[1, "date"]) + i
         if(weekdays(date) == "Friday") {
-            rect(xleft = date, ybottom = par("usr")[3], xright = date + 2,
+            rect(xleft = date, ybottom = par("usr")[3], xright = date + 3,
                  ytop = par("usr")[4], density = 20, angle = 45,
                  border = NULL, col = "gray")
         }
