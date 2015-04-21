@@ -95,6 +95,7 @@ CheckEvent.df <- function(rates, index.ticker = character(), event.date,
     series <- data.frame(date
                          = rates[(t.e - w.b - delta):(t.e + w.a), col.date],
                          stringsAsFactors = F)
+    coef <- list()
     ####
     for(col.company in col.companies) {
         # for all companies perform OLS
@@ -118,6 +119,7 @@ CheckEvent.df <- function(rates, index.ticker = character(), event.date,
                                    paste(colnames(rates)[col.company], ".obs",
                                          sep = ""))
         series <- cbind(series, company.all)        
+        coef <- c(coef, estimated.parameters) 
         #####
         
         
@@ -188,7 +190,7 @@ CheckEvent.df <- function(rates, index.ticker = character(), event.date,
                              (ncol(abnormals) - 1)) * 100
         
     }
-    return(list(abnormals, abnormals.means, result, series))
+    return(list(abnormals, abnormals.means, result, series, coef))
 }
 
 #' Check the event date of significance.
