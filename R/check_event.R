@@ -119,7 +119,7 @@ CheckEvent.df <- function(rates, index.ticker = character(), event.date,
                                    paste(colnames(rates)[col.company], ".obs",
                                          sep = ""))
         series <- cbind(series, company.all)        
-        coef <- c(coef, estimated.parameters) 
+        coef <- c(coef, estimated.parameters$coefficients) 
         #####
         
         
