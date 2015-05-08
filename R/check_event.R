@@ -27,10 +27,47 @@ GetNextDate <- function(date, set) {
     set[i]   
 }
 
-# GetAbnormals <- function(rates, index.ticker = character(), delta = numeric()) {
-#     
-#     
-# }
+GetOLSAbnormals <- function(rates, index.ticker = character(),
+                            delta = numeric()) {
+    
+    col.index <- which(colnames(rates) %in% index.ticker)
+    col.date <- which(colnames(rates) %in% "date")
+    col.companies <- (1:ncol(rates))[c(-col.index, -col.date)]
+    
+    abnormals <- data.frame(date = rates[, col.date], stringsAsFactors = F)
+    series <- data.frame(date = rates[, col.date], stringsAsFactors = F)
+    coefficients <- data.frame(name = character(), alpha = numeric(),
+                               beta = numeric())
+    
+    for(col.company in col.companies) {
+        # for all companies perform OLS
+        estimated.parameters <- lm(rates[1:delta, col.company] ~ 
+                                   rates[1:delta, col.index])
+        company.abnormal <- data.frame(rates[, col.company] - 
+                estimated.parameters$coefficients[[1]] - 
+                estimated.parameters$coefficients[[2]] * rates[, col.index])
+        
+        company.predicted <- data.frame(estimated.parameters$coefficients[[1]] + 
+                                        estimated.parameters$coefficients[[2]] * 
+                                        rates[, col.index])
+        company.observed <- data.frame(rates[, col.company])
+        company.all <- cbind(company.predicted, company.observed)
+        colnames(company.all) <- c(paste(colnames(rates)[col.company], ".pred",
+                                         sep = ""),
+                                   paste(colnames(rates)[col.company], ".obs",
+                                         sep = ""))
+        series <- cbind(series, company.all)        
+        coefficients <- rbind(coefficients, 
+                              data.frame(colnames(rates)[col.company],
+                                        estimated.parameters$coefficients[[1]],
+                                        estimated.parameters$coefficients[[2]]))
+        colnames(company.abnormal) <- colnames(rates)[col.company]
+        abnormals <- cbind(abnormals, company.abnormal)
+    }
+    
+    return(list(abnormals = abnormals, coefficients = coefficients,
+                series = series))
+}
 
 #' Check the event date of significance.
 #'
@@ -79,6 +116,9 @@ CheckEvent.df <- function(rates, index.ticker = character(), event.date,
     if(which(rates[ , "date"] %in% event.date) + w.a > nrow(rates)) {
         stop("Event window period is out of boundary of d.f. rates.")
     }
+    if(ncol(rates) < 4) {
+        stop("rates should conatain information at least about 2 companies")
+    }
     
     
     # row number of event.date
@@ -92,61 +132,12 @@ CheckEvent.df <- function(rates, index.ticker = character(), event.date,
     N.sqrt <- sqrt(N)
     
     # data.frame, which stores abnormals
-    abnormals <-
-        data.frame(date
-                   = rates[(t.e - w.b - delta):(t.e + w.a), col.date],
-                   stringsAsFactors = F)
-    ####
-    series <- data.frame(date
-                         = rates[(t.e - w.b - delta):(t.e + w.a), col.date],
-                         stringsAsFactors = F)
-    coef <- data.frame(name = character(), alpha = numeric(), beta = numeric())
-    ####
-    for(col.company in col.companies) {
-        # for all companies perform OLS
-        estimated.parameters <- lm(
-            rates[(t.e - w.b - delta):(t.e - w.b - 1), col.company] ~
-                rates[(t.e - w.b - delta):(t.e - w.b - 1), col.index])
-        company.abnormal <- data.frame(
-            rates[(t.e - w.b - delta):(t.e + w.a), col.company] - 
-                estimated.parameters$coefficients[[1]] - 
-                estimated.parameters$coefficients[[2]] * 
-                rates[(t.e - w.b - delta):(t.e + w.a), col.index])
-        ####
-        company.predicter <- data.frame(estimated.parameters$coefficients[[1]] + 
-            estimated.parameters$coefficients[[2]] * 
-            rates[(t.e - w.b - delta):(t.e + w.a), col.index])
-        company.observed <- data.frame(
-            rates[(t.e - w.b - delta):(t.e + w.a), col.company])
-        company.all <- cbind(company.predicter, company.observed)
-        colnames(company.all) <- c(paste(colnames(rates)[col.company], ".pred",
-                                         sep = ""),
-                                   paste(colnames(rates)[col.company], ".obs",
-                                         sep = ""))
-        series <- cbind(series, company.all)        
-        coef <- rbind(coef, data.frame(colnames(rates)[col.company],
-                                       estimated.parameters$coefficients[[1]],
-                                       estimated.parameters$coefficients[[2]]))
-        #####
-        
-        
-        
-        
-        
-        
-        # actually we do not need names in abnormals, so we can avoid creating
-        # new variable and directly use cbind
-        colnames(company.abnormal) <- colnames(rates)[col.company]
-        abnormals <- cbind(abnormals, company.abnormal)
-    }
+    abnormals <- GetOLSAbnormals(rates[(t.e - w.b - delta):(t.e + w.a), ],
+                                 index.ticker, delta)[[1]]
+    browser()
     # calculate means for all dates
-    # can through an error (if in rowMeans # of columns == 1)
-    if(length(col.companies) > 1) {
-        abnormals.means <- rowMeans(abnormals[, -1])
-        abnormals.sd <- sqrt(apply(abnormals[, -1], 1, var))
-    } else if(length(col.companies) == 1) {
-        abnormals.means <- abnormals[, -1]
-    }
+    abnormals.means <- rowMeans(abnormals[, -1])
+    abnormals.sd <- sqrt(apply(abnormals[, -1], 1, var))
     
     # calculate var
     abnormals.crude.sd <- sqrt(var(abnormals.means[1:delta]))
@@ -197,7 +188,7 @@ CheckEvent.df <- function(rates, index.ticker = character(), event.date,
                              (ncol(abnormals) - 1)) * 100
         
     }
-    return(list(abnormals, abnormals.means, result, series, coef))
+    return(result)
 }
 
 #' Check the event date of significance.
