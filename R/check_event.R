@@ -27,6 +27,25 @@ GetNextDate <- function(date, set) {
     set[i]   
 }
 
+#' Return the abnormals of given data.frame rates
+#'
+#' Compute the abnormals using OLS model for rates data.frame and return the
+#' whole parameters, such as abnormals, coefficients, and data.frame with 
+#' initial (observed) returns and predicted by OLS. 
+#' 
+#' Data.frame rates should contain the column with exact name \code{date}, which 
+#' sould contain the dates, as well as column with name \code{index.ticker}
+#' 
+#' @param rates data.frame, which contains daily rates of return for companies
+#'   and index, as well as column with dates and name "date"
+#' @param index.ticker character, the ticker of the index, must be a column name
+#'   of data data.frame.
+#' @param delta numeric, length of estimation period.
+#' @return list of abnormals, coefficients, and data.frame with initial
+#'   (observed) returns and predicted by OLS.
+#' @examples
+#' data(rates)
+#' GetOLSAbnormals(rates = rates, index.ticker = "SXW1E", delta = 110)
 GetOLSAbnormals <- function(rates, index.ticker = character(),
                             delta = numeric()) {
     
@@ -134,7 +153,6 @@ CheckEvent.df <- function(rates, index.ticker = character(), event.date,
     # data.frame, which stores abnormals
     abnormals <- GetOLSAbnormals(rates[(t.e - w.b - delta):(t.e + w.a), ],
                                  index.ticker, delta)[[1]]
-    browser()
     # calculate means for all dates
     abnormals.means <- rowMeans(abnormals[, -1])
     abnormals.sd <- sqrt(apply(abnormals[, -1], 1, var))
