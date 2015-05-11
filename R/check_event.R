@@ -169,6 +169,7 @@ CheckEvent.df <- function(rates, index.ticker = character(), event.date,
                          t.signif = character(w.a + w.b + 1),
                          c.stat = numeric(w.a + w.b + 1),
                          c.signif = character(w.a + w.b + 1),
+                         abnormals.mean = numeric(w.a + w.b + 1),
                          perc.negative = numeric(w.a + w.b + 1),
                          stringsAsFactors = F)
     qnorm.001 <- qnorm(1 - 0.01/2)
@@ -202,7 +203,8 @@ CheckEvent.df <- function(rates, index.ticker = character(), event.date,
         } else {
             ""
         }
-        result[i, 7] <- (sum(abnormals[delta + i, -1] < 0) /
+        result[i, 7] <- abnormals.means[delta + i]
+        result[i, 8] <- (sum(abnormals[delta + i, -1] < 0) /
                              (ncol(abnormals) - 1)) * 100
         
     }
