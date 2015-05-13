@@ -117,13 +117,13 @@ CheckEvent.df <- function(rates, index.ticker = character(), event.date,
                           delta = numeric()) {
     # check all arguments for validity    
     if(length(which(colnames(rates) %in% index.ticker)) != 1) {
-        stop(paste("The data.frame retes does not contain such an index as",
+        stop(paste("The data.frame retes does not contain such an index as ",
              index.ticker, ".", sep = ""))
     }
     if(length(which(rates[ , "date"] %in% event.date)) != 1) {
         warning(paste("The data.frame rates does not contain date event.date",
                 "or contain multiple dates. The event date to the closest",
-                "following will be taken instead.", sep = ""))
+                "following will be taken instead.", sep = " "))
         event.date <- GetNextDate(event.date, rates[ , "date"])
     }
     if(!is.numeric(w.b) || !is.numeric(w.a) || !is.numeric(delta)) {
