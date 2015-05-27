@@ -305,7 +305,37 @@ CheckEventCumulatively.data.frame <- function(rates, index.ticker = character(),
     return(list(z.stat = z.stat, z.signif = z.signif))
 }
 
-
+#' Check the whole event window on significance.
+#'
+#' Check the whole event window on significance using cumulative abnormal
+#' returns for given market index and companies.
+#' 
+#' Well-combined with packages tseries and yahoo finance data. Note: zoo package
+#' should be loaded.
+#' 
+#' @param ... objects of class zoo, containing daily rates of return of numerous
+#'   companies.
+#' @param index object of class zoo, containing index rates.
+#' @param event.date date, specifying event date, which should be tested.
+#' @param w.b numeric, parameter of time frame (window), specifying number of 
+#'   days before event.
+#' @param w.a numeric, parameter of time frame (window), specifying number of
+#'   days after event.
+#' @param delta numeric, length of estimation period.
+#' @return data.frame with marked dates and test statistics
+#' @examples
+#' library("tseries"); library("zoo")
+#' date(rates)
+#' ALV.DE <- get.hist.quote(instrument = "ALV.DE", start = "2000-01-01",
+#'                          end = "2014-12-31", quote = "Open",
+#'                          provider = "yahoo", retclass = "zoo")
+#' CS.PA <- get.hist.quote(instrument = "CS.PA", start = "2000-01-01",
+#'                          end = "2014-12-31", quote = "Open",
+#'                          provider = "yahoo", retclass = "zoo")
+#' CheckEventCumulatively.zoo(ALV.DE, CS.PA, index = zoo(rates[, "SXW1E"],
+#'                            rates[, "date"]), 
+#'                            event.date = as.Date("11.09.2001","%d.%m.%Y"),
+#'                            w.b = 10, w.a = 10, delta = 110)
 CheckEventCumulatively.zoo <- function(..., index, event.date, w.b = numeric(),
                                        w.a = numeric(), delta = numeric()) {
     # parameters' validities will be checked in CheckEventDaily
