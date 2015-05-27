@@ -88,9 +88,10 @@ GetOLSAbnormals <- function(rates, index.ticker = character(),
                 series = series))
 }
 
-#' Check the event date of significance.
+#' Check the event date of significance on daily basis.
 #'
-#' Check the event date on significance for given market index and companies.
+#' Check the event date on significance on daily basis (day-by-bay) for given
+#' market index and companies.
 #' 
 #' Data.frame rates should contain the column with exact name \code{date}, which 
 #' sould contain the dates, as well as column with name \code{index.ticker}
@@ -108,13 +109,14 @@ GetOLSAbnormals <- function(rates, index.ticker = character(),
 #' @return data.frame with marked dates and test statistics
 #' @examples
 #' data(rates)
-#' CheckEvent.df(rates = rates, index.ticker = "SXW1E", 
-#'               event.date = as.Date("11.09.2001","%d.%m.%Y"), w.b = 10,
-#'               w.a = 10, delta = 110)
-CheckEvent.df <- function(rates, index.ticker = character(), event.date,
-                          w.b = numeric(),
-                          w.a = numeric(),
-                          delta = numeric()) {
+#' CheckEventDaily.data.frame(rates = rates, index.ticker = "SXW1E", 
+#'                            event.date = as.Date("11.09.2001","%d.%m.%Y"),
+#'                            w.b = 10, w.a = 10, delta = 110)
+CheckEventDaily.data.frame <- function(rates, index.ticker = character(),
+                                       event.date,
+                                       w.b = numeric(),
+                                       w.a = numeric(),
+                                       delta = numeric()) {
     # check all arguments for validity    
     if(length(which(colnames(rates) %in% index.ticker)) != 1) {
         stop(paste("The data.frame retes does not contain such an index as ",
@@ -211,9 +213,10 @@ CheckEvent.df <- function(rates, index.ticker = character(), event.date,
     return(result)
 }
 
-#' Check the event date of significance.
+#' Check the event date of significance on daily basis.
 #'
-#' Check the event date on significance for given market index and companies.
+#' Check the event date on significance on daily basis (day-by-bay) for given
+#' market index and companies.
 #' 
 #' Well-combined with packages tseries and yahoo finance data. Note: zoo package
 #' should be loaded.
@@ -237,10 +240,11 @@ CheckEvent.df <- function(rates, index.ticker = character(), event.date,
 #' CS.PA <- get.hist.quote(instrument = "CS.PA", start = "2000-01-01",
 #'                          end = "2014-12-31", quote = "Open",
 #'                          provider = "yahoo", retclass = "zoo")
-#' CheckEvent.zoo(ALV.DE, CS.PA, index = zoo(rates[, "SXW1E"], rates[, "date"]), 
-#'               event.date = as.Date("11.09.2001","%d.%m.%Y"), w.b = 10,
-#'               w.a = 10, delta = 110)
-CheckEvent.zoo <- function(..., index, event.date, w.b = numeric(),
+#' CheckEventDaily.zoo(ALV.DE, CS.PA, index = zoo(rates[, "SXW1E"],
+#'                     rates[, "date"]), 
+#'                     event.date = as.Date("11.09.2001","%d.%m.%Y"), w.b = 10,
+#'                     w.a = 10, delta = 110)
+CheckEventDaily.zoo <- function(..., index, event.date, w.b = numeric(),
                            w.a = numeric(), delta = numeric()) {    
     # merging all zoo objects
     rates.zoo <- merge.zoo(..., index, all = T)
@@ -253,4 +257,50 @@ CheckEvent.zoo <- function(..., index, event.date, w.b = numeric(),
     CheckEvent.df(rates = rates[complete.cases(rates) ,],
                   index.ticker = colnames(rates)[length(rates)],
                   event.date = event.date, w.b = w.b, w.a = w.a, delta = delta)
+}
+
+#' Check the whole event window on significance.
+#'
+#' Check the whole event window on significance using cumulative abnormal
+#' returns for given market index and companies.
+#' 
+#' Data.frame rates should contain the column with exact name \code{date}, which 
+#' sould contain the dates, as well as column with name \code{index.ticker}
+#' 
+#' @param rates data.frame, which contains daily rates of return for companies
+#'   and index, as well as column with dates and name "date"
+#' @param index.ticker character, the ticker of the index, must be a column name
+#'   of data data.frame.
+#' @param event.date date, specifying event date, which should be tested.
+#' @param w.b numeric, parameter of time frame (window), specifying number of 
+#'   days before event.
+#' @param w.a numeric, parameter of time frame (window), specifying number of
+#'   days after event.
+#' @param delta numeric, length of estimation period.
+#' @return data.frame with marked dates and test statistics
+#' @examples
+#' data(rates)
+#' CheckEventCumulatively.data.frame(rates = rates, index.ticker = "SXW1E", 
+#'                            event.date = as.Date("11.09.2001","%d.%m.%Y"),
+#'                            w.b = 10, w.a = 10, delta = 110)
+CheckEventCumulatively.data.frame <- function(rates, index.ticker = character(),
+                                            event.date, w.b = numeric(),
+                                            w.a = numeric(),
+                                            delta = numeric()) {
+    # parameters' validities will be checked in CheckEventDaily
+    table <- CheckEventDaily.data.frame(rates, index.ticker, event.date, w.b, 
+                                        w.a, delta)
+    z.stat <- sum(table[, 5]) / nrow(table)
+    z.stat.abs <- abs(z.stat)
+    z.signif <- if(z.stat.abs > qnorm(1 - 0.01/2)) { 
+        "***"
+    } else if(z.stat.abs > qnorm(1 - 0.05/2)) {
+        "**"
+    } else if(z.stat.abs > qnorm(1 - 0.1/2)) {
+        "*"  
+    } else {
+        ""
+    }
+    return(list(z.stat = z.stat, z.signif = z.signif))
+    
 }
