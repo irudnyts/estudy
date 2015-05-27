@@ -281,8 +281,9 @@ CheckEventDaily.zoo <- function(..., index, event.date, w.b = numeric(),
 #' @examples
 #' data(rates)
 #' CheckEventCumulatively.data.frame(rates = rates, index.ticker = "SXW1E", 
-#'                            event.date = as.Date("11.09.2001","%d.%m.%Y"),
-#'                            w.b = 10, w.a = 10, delta = 110)
+#'                                   event.date = 
+#'                                   as.Date("11.09.2001","%d.%m.%Y"),
+#'                                   w.b = 10, w.a = 10, delta = 110)
 CheckEventCumulatively.data.frame <- function(rates, index.ticker = character(),
                                             event.date, w.b = numeric(),
                                             w.a = numeric(),
@@ -302,5 +303,23 @@ CheckEventCumulatively.data.frame <- function(rates, index.ticker = character(),
         ""
     }
     return(list(z.stat = z.stat, z.signif = z.signif))
-    
+}
+
+
+CheckEventCumulatively.zoo <- function(..., index, event.date, w.b = numeric(),
+                                       w.a = numeric(), delta = numeric()) {
+    # parameters' validities will be checked in CheckEventDaily
+    table <- CheckEventDaily.zoo(..., index, event.date, w.b, w.a, delta)
+    z.stat <- sum(table[, 5]) / nrow(table)
+    z.stat.abs <- abs(z.stat)
+    z.signif <- if(z.stat.abs > qnorm(1 - 0.01/2)) { 
+        "***"
+    } else if(z.stat.abs > qnorm(1 - 0.05/2)) {
+        "**"
+    } else if(z.stat.abs > qnorm(1 - 0.1/2)) {
+        "*"  
+    } else {
+        ""
+    }
+    return(list(z.stat = z.stat, z.signif = z.signif))
 }
