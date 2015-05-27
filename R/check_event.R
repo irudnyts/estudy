@@ -254,9 +254,10 @@ CheckEventDaily.zoo <- function(..., index, event.date, w.b = numeric(),
     colnames(rates)[1] <- "date"
     CleanSeries.data.frame(rates)
     
-    CheckEvent.df(rates = rates[complete.cases(rates) ,],
-                  index.ticker = colnames(rates)[length(rates)],
-                  event.date = event.date, w.b = w.b, w.a = w.a, delta = delta)
+    CheckEventDaily.data.frame(rates = rates[complete.cases(rates) ,],
+                               index.ticker = colnames(rates)[length(rates)],
+                               event.date = event.date, w.b = w.b, w.a = w.a,
+                               delta = delta)
 }
 
 #' Check the whole event window on significance.
